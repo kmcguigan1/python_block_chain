@@ -1,2 +1,2 @@
 # python_block_chain
-This is a test file to see if we can make a blockchain in python and to learn about how they work.
+This demonstrates how the Proof of Work algorithm works, and uses python to give an idea how crypto currencies are decentralized.
