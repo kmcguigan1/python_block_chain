@@ -1,5 +1,4 @@
 import time
-import json
 from uuid import uuid4
 from hashlib import sha256
 from copy import deepcopy
@@ -18,11 +17,11 @@ class Transaction(object):
 
 class Block(object):
     def __init__(self, index, timestamp, transactions, prev_hash):
-        self.index = index
-        self.timestamp = timestamp
-        self.transactions = deepcopy(transactions)
-        self.prev_hash = prev_hash
-        self.proof = None
+        self.index = index # place in chain, 0 means its the first block
+        self.timestamp = timestamp # the time the block was created
+        self.transactions = deepcopy(transactions) # the list of transacitons on this block
+        self.prev_hash = prev_hash # the hash of the previous block
+        self.proof = None # the proof for this block
         return
 
     def add_proof(self, proof):
@@ -33,18 +32,19 @@ class Block(object):
         return self.proof is not None
 
     def str_repr(self):
+        if(not self.is_valid()):
+            return None
         str_repr = f"{self.index}{self.timestamp}"
         for transaction in self.transactions:
             str_repr += transaction.str_repr()
         str_repr += f"{self.prev_hash}"
-        if(self.proof is not None):
-            str_repr += f"{self.proof}"
+        str_repr += f"{self.proof}"
         return str_repr
 
     def get_hash(self):
-        if(not self.is_valid()):
-            return None
-        return sha256(self.str_repr()).hexdigest()
+        if(self.is_valid()):
+            return sha256(self.str_repr()).hexdigest()
+        return None
 
 
 class BlockChain(object):
@@ -61,11 +61,11 @@ class BlockChain(object):
 
     def add_transaction(self, transaction):
         self.pending_transactions.append(transaction)
-        return self.chain[-1].index + 1
+        return
 
     def create_block(self, prev_hash=None):
         if(prev_hash is None):
-            prev_hash = self.chain[-1].proof
+            prev_hash = self.chain[-1].get_hash()
         new_block = Block(len(self.chain) + 1, time.time(), self.pending_transactions, prev_hash)
         self.pending_transactions.clear()
         proof = self.get_proof(new_block)
