@@ -8,6 +8,7 @@ This repository is meant to be a place to learn about the principals of hashing 
 
 Given these transactions;
 
+```
 transactions = [
     Transaction('joe', 'amy', 100),
     Transaction('steve', 'barney', 50),
@@ -15,14 +16,15 @@ transactions = [
     Transaction('hady', 'shady', 10),
     Transaction('moe', 'homer', 60)
 ]
+```
 
 Produces the following block;
 
+```
 Block: 1
 Timestamp: 1632692793.0655887
 Previous hash: 1
 Proof: 53578
-
 =======================================
 Block: 2
 Timestamp: 1632692793.1543298
@@ -47,3 +49,4 @@ Proof: 53110
 
         Transaction -> sender: moe, receiver: homer, amount: 60
 =======================================
+```
