@@ -1,5 +1,4 @@
-from class_definitions.BlockChain import BlockChain
-from class_definitions.Transaction import Transaction
+from class_definitions.BlockChain import BlockChain, Transaction
 
 test_transactions = [
     Transaction("Bob", "Alice", "10"),

@@ -31,19 +31,20 @@ class Block(object):
     def is_valid(self):
         return self.proof is not None
 
-    def str_repr(self):
-        if(not self.is_valid()):
-            return None
+    def str_repr(self, generating_proof=False):
         str_repr = f"{self.index}{self.timestamp}"
         for transaction in self.transactions:
             str_repr += transaction.str_repr()
         str_repr += f"{self.prev_hash}"
-        str_repr += f"{self.proof}"
+        if(not generating_proof):
+            if(not self.is_valid()):
+                return None
+            str_repr += f"{self.proof}"
         return str_repr
 
     def get_hash(self):
         if(self.is_valid()):
-            return sha256(self.str_repr()).hexdigest()
+            return sha256(self.str_repr().encode()).hexdigest()
         return None
 
 
@@ -56,7 +57,7 @@ class BlockChain(object):
         return
 
     def create_genesis_block(self):
-        genesis_block = self.create_block(prev_hash=1)
+        self.create_block(prev_hash=1)
         return
 
     def add_transaction(self, transaction):
@@ -74,7 +75,7 @@ class BlockChain(object):
         return
 
     def get_proof(self, block):
-        str_repr = block.str_repr()
+        str_repr = block.str_repr(generating_proof=True)
         target = "0" * self.diff_level
         proof = 0
         while(not self.is_valid_proof(str_repr, proof, target)):
@@ -90,6 +91,10 @@ class BlockChain(object):
     def show_chain(self):
         for block in self.chain:
             print(f"Block: {block.index}")
+            print(f"Timestamp: {block.timestamp}")
+            print(f"Previous hash: {block.prev_hash}")
+            print(f"Proof: {block.proof}")
+            print("")
             for transaction in block.transactions:
                 print(f"\tTransaction -> sender: {transaction.sender}, receiver: {transaction.receiver}, amount: {transaction.amount}")
             print("=======================================")
